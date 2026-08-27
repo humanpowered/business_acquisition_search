@@ -18,7 +18,7 @@ Target: asking price roughly $700,000–$1,300,000, positive disclosed cash flow
 
 6. **If few or no genuinely fresh candidates turn up** (fetches blocked or stale), say so plainly instead of padding the report — an honest "nothing new, here's what to check manually" beats a report that looks complete but isn't.
 
-7. **Commit after every run.** Once the report is saved, `git add reports/<file> CLAUDE.md README.md` (whatever changed) and commit with a short message noting the date and candidate count, e.g. `git commit -m "Acquisition search 2026-08-27: 4 candidates"`. Do this even if the run found nothing — commit the report either way so `git log` reflects every run.
+7. **Commit and push after every run.** Once the report is saved, `git add reports/<file> CLAUDE.md README.md` (whatever changed) and commit with a short message noting the date and candidate count, e.g. `git commit -m "Acquisition search 2026-08-27: 4 candidates"`. Do this even if the run found nothing — commit the report either way so `git log` reflects every run. Then `git push` to `origin master` (repo: `git@github.com:humanpowered/business_acquisition_search.git`) so GitHub stays current. If push fails (e.g. `Permission denied (publickey)` or the SSH agent isn't reachable), say so plainly and tell Craig to check the SSH agent rather than silently skipping the push.
 
 Keep the report concise — direct, low-fluff writing, no filler.
 
@@ -27,3 +27,4 @@ Keep the report concise — direct, low-fluff writing, no filler.
 - Use the built-in WebSearch and WebFetch tools directly — no Cowork-style provenance restriction; you can fetch URLs found via search normally.
 - Save reports under `reports/`, named by date, so `git log`/`git diff` gives a history of what changed run over run.
 - If a fetch throws or times out, don't spend more than 1–2 retries on the same URL — fall back to WebSearch and move on.
+- Git push uses SSH. The repo's `core.sshCommand` is already set to the Windows-native OpenSSH client (`C:/Windows/System32/OpenSSH/ssh.exe`) because Git Bash's own bundled SSH client can't reach the Windows `ssh-agent` service's named pipe — a plain `git push` should work as long as that service is running and the key is loaded (`ssh-add`). The loaded key does not survive a reboot; if push fails with `Permission denied (publickey)`, that's almost always why — tell Craig to run `ssh-add $env:USERPROFILE\.ssh\id_ed25519` in PowerShell.
